@@ -1,34 +1,29 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ProductTest {
-    Product product;
-
-    @BeforeEach
-    void setUp() {
-        this.product = new Product();
-        this.product.setProductId(UUID.fromString("eb558e9f-1c39-460e-8860-71af6af63bd6"));
-        this.product.setProductName("Sampo Cap Bambang");
-        this.product.setProductQuantity(100);
-    }
 
     @Test
-    void testGetProductId() {
-        assertEquals(UUID.fromString("eb558e9f-1c39-460e-8860-71af6af63bd6"), this.product.getProductId());
-    }
+    void gettersAndSettersWorkAsExpected() {
+        Product product = new Product();
+        UUID productId = UUID.randomUUID();
 
-    @Test
-    void testGetProductName() {
-        assertEquals("Sampo Cap Bambang", this.product.getProductName());
-    }
+        assertNull(product.getProductId());
+        assertNull(product.getProductName());
+        assertEquals(0, product.getProductQuantity());
 
-    @Test
-    void testGetProductQuantity() {
-        assertEquals(100, this.product.getProductQuantity());
+        product.setProductId(productId);
+        product.setProductName("Keyboard");
+        product.setProductQuantity(5);
+
+        assertEquals(productId, product.getProductId());
+        assertEquals("Keyboard", product.getProductName());
+        assertEquals(5, product.getProductQuantity());
     }
 }

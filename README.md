@@ -13,3 +13,9 @@
 - menggunakan fitur built in untuk user input validation
 - menambahkan error handlinh
 - menggunakan findById functions dalam edit dan delete daripada coding ulang fungsi yang sama
+
+## Refleksi 2
+### pertanyaan pertama:
+pertama-tama, saya merasa panik karena ini sudah j-1. kemudian, diperlukan unit test sebanyak manapun yang diperlukan sehingga code coverage 100% dan ditambahkan sebanyak itu lagi untuk case negative dan ditambahkan lagi untuk setiap edge case. 100% code coverage belum tentu bebas bug dan error, arti dari 100% code coverage pada dasarnya bermakna test telah mencakup setiap line setidaknya sekali. tanpa memedulikan positive dan negative case, belum lagi edge case
+### pertanyaan kedua:
+tidak. pertama ini melanggar maintenance difficuilty, perubahan pada unit yang di test berarti perubahan pada setiap test yang mengecek unit tersebut. kemudian ini juga melanggar code duplication, configuration logic akan di copy-paste ke banyak file test case. terakhir, readability, karena unit test kepisah-pisah jadi susah buat ditelusuri dan dipahami.

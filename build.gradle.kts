@@ -1,8 +1,11 @@
+import org.gradle.api.plugins.quality.Pmd
+
 plugins {
     java
     id("org.springframework.boot") version "4.0.2"
     id("io.spring.dependency-management") version "1.1.7"
     jacoco
+    pmd
 }
 
 val seleniumJavaVersion = "4.14.1"
@@ -58,4 +61,18 @@ tasks.jacocoTestReport {
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
+}
+
+pmd {
+    toolVersion = "7.8.0"
+    ruleSetFiles = files("$rootDir/config/pmd/ruleset.xml")
+    ruleSets = listOf()
+}
+
+tasks.withType<Pmd>().configureEach {
+    isConsoleOutput = true
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
 }

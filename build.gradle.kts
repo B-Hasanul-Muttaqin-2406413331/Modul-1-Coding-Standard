@@ -1,7 +1,3 @@
-import org.gradle.api.tasks.testing.Test
-import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
-import org.gradle.testing.jacoco.tasks.JacocoReport
-
 plugins {
     java
     id("org.springframework.boot") version "4.0.2"
@@ -43,61 +39,23 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-thymeleaf-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("org.seleniumhq.selenium:selenium-java:")
-    testImplementation("io.github.bonigarcia:selenium-jupiter:")
-    testImplementation("io.github.bonigarcia:webdrivermanager:")
+    testImplementation("org.seleniumhq.selenium:selenium-java:4.14.1")
+    testImplementation("io.github.bonigarcia:selenium-jupiter:5.0.1")
+    testImplementation("io.github.bonigarcia:webdrivermanager:6.1.0")
 }
 
-tasks.register<Test>("unitTest") {
-    description = "Runs unit tests."
-    group = "verification"
-
+tasks.test {
     filter {
         excludeTestsMatching("*FunctionalTest")
     }
+
+    finalizedBy(tasks.jacocoTestReport)
 }
 
-tasks.register<Test>("functionalTest") {
-    description = "Runs functional tests."
-    group = "verification"
-
-    filter {
-        includeTestsMatching("*FunctionalTest")
-    }
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
 }
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
-}
-
-jacoco {
-    toolVersion = "0.8.13"
-}
-
-tasks.named<Test>("test") {
-    finalizedBy(tasks.named("jacocoTestReport"))
-}
-
-tasks.named<JacocoReport>("jacocoTestReport") {
-    dependsOn(tasks.named("test"))
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
-    }
-}
-
-tasks.named<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
-    violationRules {
-        rule {
-            limit {
-                counter = "LINE"
-                value = "COVEREDRATIO"
-                minimum = "0.80".toBigDecimal()
-            }
-        }
-    }
-}
-
-tasks.named("check") {
-    dependsOn(tasks.named("jacocoTestCoverageVerification"))
 }

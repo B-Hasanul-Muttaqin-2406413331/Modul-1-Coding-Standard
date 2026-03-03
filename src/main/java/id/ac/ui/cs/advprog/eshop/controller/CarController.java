@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/car")
-class CarController extends ProductController {
+public class CarController {
 
     @Autowired
     private CarServiceImpl carservice;

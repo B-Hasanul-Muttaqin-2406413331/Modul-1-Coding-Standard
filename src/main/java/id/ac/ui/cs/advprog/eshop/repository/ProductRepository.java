@@ -33,14 +33,18 @@ public class ProductRepository implements ProductRepositoryInterface {
     }
 
     public Product update(Product product) {
-        for (Product p : productData) {
-            if (p.getProductId().equals(product.getProductId())) {
-                p.setProductName(product.getProductName());
-                p.setProductQuantity(product.getProductQuantity());
-                return p;
-            }
+        if (product.getProductId() == null) {
+            return null;
         }
-        return null;
+
+        Product existingProduct = findById(product.getProductId().toString());
+        if (existingProduct == null) {
+            return null;
+        }
+
+        existingProduct.setProductName(product.getProductName());
+        existingProduct.setProductQuantity(product.getProductQuantity());
+        return existingProduct;
     }
     public void delete(String id) {
         productData.removeIf(product -> product.getProductId().toString().equals(id));

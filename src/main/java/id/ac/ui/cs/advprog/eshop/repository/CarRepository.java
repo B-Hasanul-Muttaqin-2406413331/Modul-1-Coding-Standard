@@ -29,16 +29,15 @@ public class CarRepository implements CarRepositoryInterface {
         return null;
     }
     public Car update(UUID id, Car updatecar) {
-        for (int i = 0; i< carData.size(); i++) {
-            Car car = carData.get(i);
-            if (car.getCarID().equals(id)) {
-                car.setCarName(updatecar.getCarName());
-                car.setCarColor(updatecar.getCarColor());
-                car.setCarQuantity(updatecar.getCarQuantity());
-                return car;
-            }
+        Car existingCar = findById(id);
+        if (existingCar == null) {
+            return null;
         }
-        return null;
+
+        existingCar.setCarName(updatecar.getCarName());
+        existingCar.setCarColor(updatecar.getCarColor());
+        existingCar.setCarQuantity(updatecar.getCarQuantity());
+        return existingCar;
     }
 
     public void delete(UUID id) {

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.UUID;
 
 @Repository
@@ -20,8 +19,8 @@ public class ProductRepository implements ProductRepositoryInterface {
         return product;
     }
 
-    public Iterator<Product> findAll() {
-        return productData.iterator();
+    public List<Product> findAll() {
+        return new ArrayList<>(productData);
     }
 
     public Product findById(String id) {

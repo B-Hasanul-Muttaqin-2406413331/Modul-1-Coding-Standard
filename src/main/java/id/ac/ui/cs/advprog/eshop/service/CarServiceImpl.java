@@ -15,14 +15,14 @@ public class CarServiceImpl implements CarService {
     private CarRepository carRepository;
 
     @Override
-    public Car Create(Car car) {
+    public Car create(Car car) {
         carRepository.create(car);
         return car;
     }
 
     @Override
     public List<Car> findAll() {
-        Iterator<Car> carIterator =  carRepository.findAll();
+        Iterator<Car> carIterator = carRepository.findAll();
         List<Car> allCar = new ArrayList<>();
         carIterator.forEachRemaining(allCar::add);
         return allCar;
@@ -42,6 +42,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void deleteByCarId(UUID carId) {
-    carRepository.delete(carId);
+        carRepository.delete(carId);
     }
+
 }

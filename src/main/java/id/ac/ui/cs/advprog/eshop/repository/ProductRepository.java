@@ -5,11 +5,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.UUID;
 
 @Repository
-public class ProductRepository {
+public class ProductRepository implements ProductRepositoryInterface {
     private List<Product> productData = new ArrayList<>();
 
     public Product create(Product product) {
@@ -20,8 +19,8 @@ public class ProductRepository {
         return product;
     }
 
-    public Iterator<Product> findAll() {
-        return productData.iterator();
+    public List<Product> findAll() {
+        return new ArrayList<>(productData);
     }
 
     public Product findById(String id) {
@@ -34,14 +33,18 @@ public class ProductRepository {
     }
 
     public Product update(Product product) {
-        for (Product p : productData) {
-            if (p.getProductId().equals(product.getProductId())) {
-                p.setProductName(product.getProductName());
-                p.setProductQuantity(product.getProductQuantity());
-                return p;
-            }
+        if (product.getProductId() == null) {
+            return null;
         }
-        return null;
+
+        Product existingProduct = findById(product.getProductId().toString());
+        if (existingProduct == null) {
+            return null;
+        }
+
+        existingProduct.setProductName(product.getProductName());
+        existingProduct.setProductQuantity(product.getProductQuantity());
+        return existingProduct;
     }
     public void delete(String id) {
         productData.removeIf(product -> product.getProductId().toString().equals(id));

@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CarService {
-    public Car create(Car car);
-    public List<Car> findAll();
+    Car create(Car car);
+    List<Car> findAll();
     Car findById(UUID carId);
-    public Car Update(UUID carID, Car car);
-    public void deleteByCarId(UUID carId);
+    Car Update(UUID carID, Car car);
+    void deleteByCarId(UUID carId);
 }

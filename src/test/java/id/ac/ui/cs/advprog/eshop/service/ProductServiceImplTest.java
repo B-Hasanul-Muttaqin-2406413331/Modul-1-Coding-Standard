@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,17 +38,15 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void findAllConvertsIteratorIntoList() {
+    void findAllDelegatesListFromRepository() {
         Product first = createProduct("Book", 1);
         Product second = createProduct("Pen", 5);
-        Iterator<Product> iterator = List.of(first, second).iterator();
-        when(productRepository.findAll()).thenReturn(iterator);
+        List<Product> expected = List.of(first, second);
+        when(productRepository.findAll()).thenReturn(expected);
 
         List<Product> products = productService.findAll();
 
-        assertEquals(2, products.size());
-        assertEquals(first, products.get(0));
-        assertEquals(second, products.get(1));
+        assertEquals(expected, products);
     }
 
     @Test

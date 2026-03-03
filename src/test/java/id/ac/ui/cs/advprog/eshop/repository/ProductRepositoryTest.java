@@ -4,7 +4,7 @@ import id.ac.ui.cs.advprog.eshop.model.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,13 +50,11 @@ class ProductRepositoryTest {
         Product first = repository.create(createProduct(UUID.randomUUID(), "A", 1));
         Product second = repository.create(createProduct(UUID.randomUUID(), "B", 2));
 
-        Iterator<Product> iterator = repository.findAll();
+        List<Product> products = repository.findAll();
 
-        assertTrue(iterator.hasNext());
-        assertEquals(first, iterator.next());
-        assertTrue(iterator.hasNext());
-        assertEquals(second, iterator.next());
-        assertFalse(iterator.hasNext());
+        assertEquals(2, products.size());
+        assertEquals(first, products.get(0));
+        assertEquals(second, products.get(1));
     }
 
     @Test

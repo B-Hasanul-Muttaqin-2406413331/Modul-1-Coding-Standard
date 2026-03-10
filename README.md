@@ -33,3 +33,18 @@ tidak sepenuhnya. untuk ci, requirements sesuai tertulis di module mengenai auto
 1. prinsip yang saya terapkan pada project ini terutama adalah beberapa bagian dari SOLID, khususnya single responsibility principle, dependency inversion principle, dan open-closed principle. contohnya, `CarController` tidak lagi mewarisi `ProductController` karena controller untuk car dan product punya tanggung jawab route yang berbeda. selain itu, controller dan service juga mulai diarahkan untuk bergantung pada abstraksi seperti interface service dan interface repository, bukan langsung ke implementasi konkrit. pada model, `Car` juga diubah untuk mewarisi `Product` agar field yang memang sama tidak diduplikasi lagi.
 2. keuntungan menerapkan SOLID pada project ini adalah code menjadi lebih mudah dirawat, lebih jelas tanggung jawabnya, dan lebih aman saat dikembangkan. contohnya, ketika `CarController` dilepas dari inheritance yang salah terhadap `ProductController`, perubahan pada route product tidak lagi berisiko memengaruhi route car. lalu, ketika service bergantung pada interface repository, implementasi repository bisa diganti tanpa harus mengubah service. contoh lainnya, saat `Car` mewarisi `Product`, field umum seperti id, nama, dan quantity tidak perlu ditulis dua kali, sehingga perubahan pada struktur data bersama bisa dilakukan lebih konsisten.
 3. kerugian jika SOLID tidak diterapkan pada project ini adalah code akan lebih mudah menumpuk duplikasi, lebih rapuh terhadap perubahan, dan lebih sulit dipahami. contohnya, saat `Car` sebelumnya memiliki field sendiri yang sebenarnya sama dengan `Product`, ada duplikasi data dan potensi inkonsistensi penamaan seperti `productId` dan `carID`. contoh lain, jika controller atau service langsung bergantung pada class implementasi, setiap pergantian implementasi akan memaksa perubahan di banyak tempat. inheritance yang tidak tepat seperti `CarController` mewarisi `ProductController` juga membuat struktur project membingungkan karena relasi antar class tidak mencerminkan relasi domain yang sebenarnya.
+
+
+# module 4
+## refleksi tutorial
+### Reflect based on Percival (2017) proposed self-reflective questions
+1. correctness: test suite untuk order sudah berfungsi secara adequate, dengan minimal satu happy path dan satu unhappy path untuk setiap function. tentunya test ini belum terlalu berfungsi untuk mengawasi edge case, tapi sudah lebih dari cukup untuk default case
+2. maintainability: tests hanya peduli pada input dan output dan terabstraksi secara logic dari unit yang di test. hal ini membuat refactoring untuk unit functiopn lebih mudah. tests yang digunakan juga tidak overdone ataupun overcomplicating the unit tested. balance antara unit test, integration test maupun functional test tidak terlalu relevan karena fungsi yang di add di tutorial belum ada integration atau functional layer.
+3. productive workflow: yes, setiap unit test bekerja secara cepat dan bisa dijalankan per test, per test class maupun secara keseluruhan. feedback yang diberikan cepat dan spesifik sehingga bagus untuk quick development cycle.
+
+### reflect whether your tests have successfully followed F.I.R.S.T. principle
+1. fast: per unit test kurang dari satu detik dan per test class kurang dari 7
+2. independent: test bersifat independen satu yang lainnya tanpa menunggu test sebelumnya selesai. order test bisa diubah-ubah tanpa mengganti hasil
+3. repeatable: test tidak bergantung pada enviroment variable ataupun enviroment installation
+4. self-validating: test lepas tangan, tinggal klik dan cek meraha atau hijau
+5. timely: test ditulis dan di-commit sebelum kode

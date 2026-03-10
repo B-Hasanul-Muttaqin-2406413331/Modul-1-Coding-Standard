@@ -1,6 +1,7 @@
 
 package id.ac.ui.cs.advprog.eshop.model;
 
+import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -98,12 +99,10 @@ class OrderTest {
                 "13652556-012a-4c07-b546-54eb1396d79b",
                 this.products,
                 1708560000L,
-                "Safira Sudrajat"
+                "Safira Sudrajat",
+                OrderStatus.CANCELLED.getValue()
         );
-
-        order.setStatus("CANCELLED");
-
-        assertEquals("CANCELLED", order.getStatus());
+        assertEquals(OrderStatus.CANCELLED.getValue(), order.getStatus());
     }
 
     @Test

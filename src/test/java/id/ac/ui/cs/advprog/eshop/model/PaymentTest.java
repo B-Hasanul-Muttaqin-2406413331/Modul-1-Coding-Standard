@@ -12,7 +12,6 @@ class PaymentTest {
 
     private Map<String, String> voucherPaymentData;
     private Map<String, String> cashOnDeliveryPaymentData;
-    private Map<String, String> bankTransferPaymentData;
 
     @BeforeEach
     void setUp() {
@@ -22,10 +21,6 @@ class PaymentTest {
         cashOnDeliveryPaymentData = new HashMap<>();
         cashOnDeliveryPaymentData.put("address", "Jl. Margonda Raya");
         cashOnDeliveryPaymentData.put("deliveryFee", "10000");
-
-        bankTransferPaymentData = new HashMap<>();
-        bankTransferPaymentData.put("bankName", "BCA");
-        bankTransferPaymentData.put("referenceCode", "TRX-001");
     }
 
     @Test
@@ -84,43 +79,6 @@ class PaymentTest {
                 "payment-5",
                 "CASH_ON_DELIVERY",
                 cashOnDeliveryPaymentData
-        );
-
-        assertEquals("REJECTED", payment.getStatus());
-    }
-
-    @Test
-    void testCreateBankTransferPaymentIfBankNameAndReferenceCodeValid() {
-        Payment payment = new Payment(
-                "payment-6",
-                "BANK_TRANSFER",
-                bankTransferPaymentData
-        );
-
-        assertEquals("SUCCESS", payment.getStatus());
-    }
-
-    @Test
-    void testCreateBankTransferPaymentIfBankNameEmpty() {
-        bankTransferPaymentData.put("bankName", "");
-
-        Payment payment = new Payment(
-                "payment-7",
-                "BANK_TRANSFER",
-                bankTransferPaymentData
-        );
-
-        assertEquals("REJECTED", payment.getStatus());
-    }
-
-    @Test
-    void testCreateBankTransferPaymentIfReferenceCodeEmpty() {
-        bankTransferPaymentData.put("referenceCode", "");
-
-        Payment payment = new Payment(
-                "payment-8",
-                "BANK_TRANSFER",
-                bankTransferPaymentData
         );
 
         assertEquals("REJECTED", payment.getStatus());

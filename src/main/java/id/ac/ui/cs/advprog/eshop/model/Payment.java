@@ -9,7 +9,6 @@ public class Payment {
 
     private static final String METHOD_VOUCHER_CODE = "VOUCHER_CODE";
     private static final String METHOD_CASH_ON_DELIVERY = "CASH_ON_DELIVERY";
-    private static final String METHOD_BANK_TRANSFER = "BANK_TRANSFER";
 
     private static final String STATUS_SUCCESS = "SUCCESS";
     private static final String STATUS_REJECTED = "REJECTED";
@@ -17,8 +16,6 @@ public class Payment {
     private static final String KEY_VOUCHER_CODE = "voucherCode";
     private static final String KEY_ADDRESS = "address";
     private static final String KEY_DELIVERY_FEE = "deliveryFee";
-    private static final String KEY_BANK_NAME = "bankName";
-    private static final String KEY_REFERENCE_CODE = "referenceCode";
 
     private static final int VOUCHER_CODE_LENGTH = 16;
     private static final int VOUCHER_CODE_DIGIT_COUNT = 8;
@@ -45,10 +42,6 @@ public class Payment {
             return resolveStatus(validateCashOnDelivery(paymentData));
         }
 
-        if (METHOD_BANK_TRANSFER.equals(method)) {
-            return resolveStatus(validateBankTransfer(paymentData));
-        }
-
         return STATUS_REJECTED;
     }
 
@@ -72,11 +65,6 @@ public class Payment {
     private boolean validateCashOnDelivery(Map<String, String> paymentData) {
         return isNotNullOrEmpty(paymentData.get(KEY_ADDRESS))
                 && isNotNullOrEmpty(paymentData.get(KEY_DELIVERY_FEE));
-    }
-
-    private boolean validateBankTransfer(Map<String, String> paymentData) {
-        return isNotNullOrEmpty(paymentData.get(KEY_BANK_NAME))
-                && isNotNullOrEmpty(paymentData.get(KEY_REFERENCE_CODE));
     }
 
     private String resolveStatus(boolean isValid) {

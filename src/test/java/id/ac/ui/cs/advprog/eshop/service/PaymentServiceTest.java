@@ -69,10 +69,10 @@ class PaymentServiceTest {
         payments.add(new Payment("payment-1", "VOUCHER_CODE", paymentDataOne));
 
         Map<String, String> paymentDataTwo = new HashMap<>();
-        paymentDataTwo.put("bankName", "BCA");
-        paymentDataTwo.put("referenceCode", "TRX-001");
+        paymentDataTwo.put("address", "");
+        paymentDataTwo.put("deliveryFee", "10000");
         paymentDataTwo.put("orderId", order2.getId());
-        payments.add(new Payment("payment-2", "BANK_TRANSFER", paymentDataTwo));
+        payments.add(new Payment("payment-2", "CASH_ON_DELIVERY", paymentDataTwo));
     }
 
     @Test

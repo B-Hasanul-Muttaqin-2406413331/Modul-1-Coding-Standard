@@ -31,9 +31,9 @@ class PaymentRepositoryTest {
         payments.add(new Payment("payment-2", "CASH_ON_DELIVERY", paymentDataTwo));
 
         Map<String, String> paymentDataThree = new HashMap<>();
-        paymentDataThree.put("bankName", "BCA");
-        paymentDataThree.put("referenceCode", "TRX-001");
-        payments.add(new Payment("payment-3", "BANK_TRANSFER", paymentDataThree));
+        paymentDataThree.put("address", "Jl. Kenangan Raya");
+        paymentDataThree.put("deliveryFee", "5000");
+        payments.add(new Payment("payment-3", "CASH_ON_DELIVERY", paymentDataThree));
     }
 
     @Test

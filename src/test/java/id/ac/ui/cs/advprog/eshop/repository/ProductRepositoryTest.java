@@ -89,6 +89,17 @@ class ProductRepositoryTest {
     }
 
     @Test
+    void updateReturnsNullWhenProductIdIsNull() {
+        Product product = new Product();
+        product.setProductName("No Id");
+        product.setProductQuantity(5);
+
+        Product updated = repository.update(product);
+
+        assertNull(updated);
+    }
+
+    @Test
     void deleteRemovesMatchingProductOnly() {
         Product first = repository.create(createProduct(UUID.randomUUID(), "Phone", 3));
         Product second = repository.create(createProduct(UUID.randomUUID(), "Tablet", 7));

@@ -7,6 +7,23 @@ import java.util.Map;
 @Getter
 public class Payment {
 
+    private static final String METHOD_VOUCHER_CODE = "VOUCHER_CODE";
+    private static final String METHOD_CASH_ON_DELIVERY = "CASH_ON_DELIVERY";
+    private static final String METHOD_BANK_TRANSFER = "BANK_TRANSFER";
+
+    private static final String STATUS_SUCCESS = "SUCCESS";
+    private static final String STATUS_REJECTED = "REJECTED";
+
+    private static final String KEY_VOUCHER_CODE = "voucherCode";
+    private static final String KEY_ADDRESS = "address";
+    private static final String KEY_DELIVERY_FEE = "deliveryFee";
+    private static final String KEY_BANK_NAME = "bankName";
+    private static final String KEY_REFERENCE_CODE = "referenceCode";
+
+    private static final int VOUCHER_CODE_LENGTH = 16;
+    private static final int VOUCHER_CODE_DIGIT_COUNT = 8;
+    private static final String VOUCHER_CODE_PREFIX = "ESHOP";
+
     String id;
     String method;
     String status;
@@ -20,52 +37,60 @@ public class Payment {
     }
 
     private String calculateStatus(String method, Map<String, String> paymentData) {
-        if ("VOUCHER_CODE".equals(method)) {
-            return validateVoucher(paymentData) ? "SUCCESS" : "REJECTED";
+        if (METHOD_VOUCHER_CODE.equals(method)) {
+            return resolveStatus(validateVoucher(paymentData));
         }
 
-        if ("CASH_ON_DELIVERY".equals(method)) {
-            return validateCashOnDelivery(paymentData) ? "SUCCESS" : "REJECTED";
+        if (METHOD_CASH_ON_DELIVERY.equals(method)) {
+            return resolveStatus(validateCashOnDelivery(paymentData));
         }
 
-        if ("BANK_TRANSFER".equals(method)) {
-            return validateBankTransfer(paymentData) ? "SUCCESS" : "REJECTED";
+        if (METHOD_BANK_TRANSFER.equals(method)) {
+            return resolveStatus(validateBankTransfer(paymentData));
         }
 
-        return "REJECTED";
+        return STATUS_REJECTED;
     }
 
     private boolean validateVoucher(Map<String, String> paymentData) {
-        String voucherCode = paymentData.get("voucherCode");
+        String voucherCode = paymentData.get(KEY_VOUCHER_CODE);
         if (voucherCode == null) {
             return false;
         }
 
-        if (voucherCode.length() != 16) {
+        if (voucherCode.length() != VOUCHER_CODE_LENGTH) {
             return false;
         }
 
-        if (!voucherCode.startsWith("ESHOP")) {
+        if (!voucherCode.startsWith(VOUCHER_CODE_PREFIX)) {
             return false;
         }
 
+        return countDigits(voucherCode) == VOUCHER_CODE_DIGIT_COUNT;
+    }
+
+    private boolean validateCashOnDelivery(Map<String, String> paymentData) {
+        return isNotNullOrEmpty(paymentData.get(KEY_ADDRESS))
+                && isNotNullOrEmpty(paymentData.get(KEY_DELIVERY_FEE));
+    }
+
+    private boolean validateBankTransfer(Map<String, String> paymentData) {
+        return isNotNullOrEmpty(paymentData.get(KEY_BANK_NAME))
+                && isNotNullOrEmpty(paymentData.get(KEY_REFERENCE_CODE));
+    }
+
+    private String resolveStatus(boolean isValid) {
+        return isValid ? STATUS_SUCCESS : STATUS_REJECTED;
+    }
+
+    private int countDigits(String value) {
         int digitCount = 0;
-        for (char c : voucherCode.toCharArray()) {
+        for (char c : value.toCharArray()) {
             if (Character.isDigit(c)) {
                 digitCount += 1;
             }
         }
-        return digitCount == 8;
-    }
-
-    private boolean validateCashOnDelivery(Map<String, String> paymentData) {
-        return isNotNullOrEmpty(paymentData.get("address"))
-                && isNotNullOrEmpty(paymentData.get("deliveryFee"));
-    }
-
-    private boolean validateBankTransfer(Map<String, String> paymentData) {
-        return isNotNullOrEmpty(paymentData.get("bankName"))
-                && isNotNullOrEmpty(paymentData.get("referenceCode"));
+        return digitCount;
     }
 
     private boolean isNotNullOrEmpty(String value) {

@@ -15,6 +15,10 @@ import java.util.UUID;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
+    private static final String KEY_ORDER_ID = "orderId";
+    private static final String PAYMENT_STATUS_SUCCESS = "SUCCESS";
+    private static final String PAYMENT_STATUS_REJECTED = "REJECTED";
+
     @Autowired
     private PaymentRepository paymentRepository;
 
@@ -23,23 +27,18 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
-        String paymentId = UUID.randomUUID().toString();
-        Map<String, String> savedPaymentData = new HashMap<>(paymentData);
-        savedPaymentData.put("orderId", order.getId());
-
-        Payment payment = new Payment(paymentId, method, savedPaymentData);
+        Payment payment = new Payment(
+                UUID.randomUUID().toString(),
+                method,
+                createPaymentData(order, paymentData)
+        );
         return paymentRepository.save(payment);
     }
 
     @Override
     public Payment setStatus(Payment payment, String status) {
-        String orderId = payment.getPaymentData().get("orderId");
-
-        if ("SUCCESS".equals(status)) {
-            orderService.updateStatus(orderId, OrderStatus.SUCCESS.getValue());
-        } else if ("REJECTED".equals(status)) {
-            orderService.updateStatus(orderId, OrderStatus.FAILED.getValue());
-        }
+        String orderId = payment.getPaymentData().get(KEY_ORDER_ID);
+        updateOrderStatus(orderId, status);
 
         return paymentRepository.save(payment);
     }
@@ -52,5 +51,19 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public List<Payment> getAllPayments() {
         return paymentRepository.getAllPayments();
+    }
+
+    private Map<String, String> createPaymentData(Order order, Map<String, String> paymentData) {
+        Map<String, String> savedPaymentData = new HashMap<>(paymentData);
+        savedPaymentData.put(KEY_ORDER_ID, order.getId());
+        return savedPaymentData;
+    }
+
+    private void updateOrderStatus(String orderId, String paymentStatus) {
+        if (PAYMENT_STATUS_SUCCESS.equals(paymentStatus)) {
+            orderService.updateStatus(orderId, OrderStatus.SUCCESS.getValue());
+        } else if (PAYMENT_STATUS_REJECTED.equals(paymentStatus)) {
+            orderService.updateStatus(orderId, OrderStatus.FAILED.getValue());
+        }
     }
 }

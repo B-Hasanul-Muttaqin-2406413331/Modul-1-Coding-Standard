@@ -122,6 +122,18 @@ class PaymentServiceTest {
     }
 
     @Test
+    void testSetStatusUnknownDoesNotUpdateOrderStatus() {
+        Payment payment = payments.get(0);
+        doReturn(payment).when(paymentRepository).save(any(Payment.class));
+
+        Payment result = paymentService.setStatus(payment, "PENDING");
+
+        verify(orderService, never()).updateStatus(anyString(), anyString());
+        verify(paymentRepository, times(1)).save(any(Payment.class));
+        assertEquals(payment.getId(), result.getId());
+    }
+
+    @Test
     void testGetPayment() {
         Payment payment = payments.get(0);
         doReturn(payment).when(paymentRepository).findById(payment.getId());

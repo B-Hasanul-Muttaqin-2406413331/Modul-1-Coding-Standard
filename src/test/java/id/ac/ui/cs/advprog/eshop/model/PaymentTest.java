@@ -48,6 +48,45 @@ class PaymentTest {
     }
 
     @Test
+    void testCreateVoucherPaymentIfVoucherCodePrefixInvalid() {
+        voucherPaymentData.put("voucherCode", "STORE12345678ABC");
+
+        Payment payment = new Payment(
+                "payment-2b",
+                "VOUCHER_CODE",
+                voucherPaymentData
+        );
+
+        assertEquals("REJECTED", payment.getStatus());
+    }
+
+    @Test
+    void testCreateVoucherPaymentIfVoucherCodeLengthInvalid() {
+        voucherPaymentData.put("voucherCode", "ESHOP123");
+
+        Payment payment = new Payment(
+                "payment-2c",
+                "VOUCHER_CODE",
+                voucherPaymentData
+        );
+
+        assertEquals("REJECTED", payment.getStatus());
+    }
+
+    @Test
+    void testCreateVoucherPaymentIfVoucherCodeMissing() {
+        voucherPaymentData.remove("voucherCode");
+
+        Payment payment = new Payment(
+                "payment-2d",
+                "VOUCHER_CODE",
+                voucherPaymentData
+        );
+
+        assertEquals("REJECTED", payment.getStatus());
+    }
+
+    @Test
     void testCreateCashOnDeliveryPaymentIfAddressAndDeliveryFeeValid() {
         Payment payment = new Payment(
                 "payment-3",
@@ -79,6 +118,30 @@ class PaymentTest {
                 "payment-5",
                 "CASH_ON_DELIVERY",
                 cashOnDeliveryPaymentData
+        );
+
+        assertEquals("REJECTED", payment.getStatus());
+    }
+
+    @Test
+    void testCreateCashOnDeliveryPaymentIfAddressMissing() {
+        cashOnDeliveryPaymentData.remove("address");
+
+        Payment payment = new Payment(
+                "payment-6",
+                "CASH_ON_DELIVERY",
+                cashOnDeliveryPaymentData
+        );
+
+        assertEquals("REJECTED", payment.getStatus());
+    }
+
+    @Test
+    void testCreatePaymentIfMethodUnsupported() {
+        Payment payment = new Payment(
+                "payment-7",
+                "BANK_TRANSFER",
+                voucherPaymentData
         );
 
         assertEquals("REJECTED", payment.getStatus());
